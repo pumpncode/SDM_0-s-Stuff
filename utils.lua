@@ -173,6 +173,12 @@ function rts_init()
     return num_card1, num_card2
 end
 
+-- Faster way to write non-BP/retrigger check
+function no_bp_retrigger(context)
+    if not context then return false end
+    return not (context.blueprint or context.retrigger_joker)
+end
+
 --- Second "add_to_deck" to prevent context.sdm_adding_card to loop ---
 function Card:add_to_deck2(from_debuff)
     local obj = self.config.center
