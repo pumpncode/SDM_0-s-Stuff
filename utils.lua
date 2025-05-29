@@ -21,6 +21,10 @@ function SDM_0s_Stuff_Funcs.index_elem(table, value)
     return nil
 end
 
+function SDM_0s_Stuff_Funcs.is_bakery_good(card)
+    return card.ability.set == "Bakery" or card.ability.name == "Wedding Cake"
+end
+
 -- Faster way to decrease food/bakery consumables remaining counter
 function SDM_0s_Stuff_Funcs.decrease_remaining_food(card)
     if card.ability.extra.remaining - 1 <= 0 then
@@ -258,6 +262,20 @@ function Card:calculate_partner(context)
         end
     end
     return cpnr(self, context)
+end
+
+local co = Card.open
+function Card:open()
+    co(self)
+    if self.config and self.config.center and self.config.center.kind and self.config.center.kind == "Bakery" then
+        G.E_MANAGER:add_event(Event({
+            trigger = 'after',
+            delay = 1.3*math.sqrt(G.SETTINGS.GAMESPEED),
+            func = function()
+                play_sound('sdm_bakery_doorbell')
+            return true
+        end}))
+    end
 end
 
 --- Talisman compat
